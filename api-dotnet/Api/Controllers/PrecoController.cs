@@ -25,12 +25,12 @@ public class PrecoController : ControllerBase
         return Ok(new { mensagem = "Recebido", valor = dto.Preco });
     }
 
-    [HttpPost("zerar")]
-    public async Task<IActionResult> ZerarCache()
-    {
-        await _supabase.From<Preco>().Delete();
-        return Ok(new { mensagem = "Tabela zerada!" });
-    }
+   [HttpPost("zerar")]
+public async Task<IActionResult> ZerarCache()
+{
+    await _supabase.From<Preco>().Filter("id", Supabase.Postgrest.Constants.Operator.GreaterThan, 0).Delete();
+    return Ok(new { mensagem = "Tabela zerada!" });
+}
 }
 
 public class PrecoDto
