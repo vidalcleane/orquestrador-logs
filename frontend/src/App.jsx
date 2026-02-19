@@ -6,10 +6,11 @@ const supabase = createClient(
   "sb_publishable_H5Mq3d6Yx8VuEiK3Jc45ng_Q9iNS9ve"
 );
 
-const API_URL = "https://orquestrador-logs-production.up.railway.app/webhook";
+const API_URL = "https://wonderful-charisma-production-57e5.up.railway.app";
 
 export default function App() {
   const [precos, setPrecos] = useState([]);
+  const [status, setStatus] = useState(null);
 
   const buscarPrecos = async () => {
     const { data } = await supabase
@@ -20,8 +21,21 @@ export default function App() {
   };
 
   const zerarCache = async () => {
-    await fetch(`${API_URL}/zerar`, { method: "DELETE" });
-    await buscarPrecos();
+    try {
+      setStatus("carregando");
+      const res = await fetch(`${API_URL}/webhook/zerar`, { method: "DELETE" });
+      if (res.ok) {
+        setStatus("sucesso");
+        await buscarPrecos();
+      } else {
+        setStatus("erro");
+      }
+    } catch (err) {
+      console.error("Erro ao zerar cache:", err);
+      setStatus("erro");
+    } finally {
+      setTimeout(() => setStatus(null), 3000);
+    }
   };
 
   useEffect(() => {
@@ -36,10 +50,18 @@ export default function App() {
 
       <button
         onClick={zerarCache}
-        className="mb-6 bg-red-600 hover:bg-red-700 px-4 py-2 rounded font-semibold"
+        disabled={status === "carregando"}
+        className="mb-6 bg-red-600 hover:bg-red-700 disabled:opacity-50 px-4 py-2 rounded font-semibold"
       >
-        🗑️ Zerar Cache
+        {status === "carregando" ? "⏳ Zerando..." : "🗑️ Zerar Cache"}
       </button>
+
+      {status === "sucesso" && (
+        <span className="ml-4 text-green-400 font-semibold">✅ Cache zerado com sucesso!</span>
+      )}
+      {status === "erro" && (
+        <span className="ml-4 text-red-400 font-semibold">❌ Erro ao zerar cache. Verifique o console.</span>
+      )}
 
       <table className="w-full bg-gray-800 rounded-lg overflow-hidden">
         <thead className="bg-gray-700">
