@@ -6,7 +6,7 @@ const supabase = createClient(
   "sb_publishable_H5Mq3d6Yx8VuEiK3Jc45ng_Q9iNS9ve"
 );
 
-const API_URL = "const API_URL = "https://orquestrador-logs-production.up.railway.app/webhook";
+const API_URL = "https://orquestrador-logs-production.up.railway.app/webhook";
 
 export default function App() {
   const [precos, setPrecos] = useState([]);
