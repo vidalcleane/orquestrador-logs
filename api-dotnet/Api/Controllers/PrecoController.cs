@@ -28,8 +28,15 @@ public class PrecoController : ControllerBase
    [HttpPost("zerar")]
 public async Task<IActionResult> ZerarCache()
 {
-    await _supabase.From<Preco>().Filter("id", Supabase.Postgrest.Constants.Operator.GreaterThan, 0).Delete();
-    return Ok(new { mensagem = "Tabela zerada!" });
+    try
+    {
+        await _supabase.From<Preco>().Filter("id", Supabase.Postgrest.Constants.Operator.GreaterThan, 0).Delete();
+        return Ok(new { mensagem = "Tabela zerada!" });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, new { erro = ex.Message, detalhe = ex.ToString() });
+    }
 }
 }
 
