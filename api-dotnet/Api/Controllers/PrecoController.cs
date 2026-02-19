@@ -25,7 +25,7 @@ public class PrecoController : ControllerBase
         return Ok(new { mensagem = "Recebido", valor = dto.Preco });
     }
 
-    [HttpDelete("zerar")]
+    [HttpPost("zerar")]
     public async Task<IActionResult> ZerarCache()
     {
         await _supabase.From<Preco>().Delete();

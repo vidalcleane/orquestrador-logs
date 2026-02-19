@@ -23,7 +23,7 @@ export default function App() {
   const zerarCache = async () => {
     try {
       setStatus("carregando");
-      const res = await fetch(`${API_URL}/webhook/zerar`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}/webhook/zerar`, { method: "POST" });
       if (res.ok) {
         setStatus("sucesso");
         await buscarPrecos();
