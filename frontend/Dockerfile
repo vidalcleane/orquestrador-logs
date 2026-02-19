@@ -1,10 +1,17 @@
-FROM python:3.13-slim
-
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY api-dotnet/Api/*.csproj ./
+RUN dotnet restore
 
-COPY worker.py .
+COPY api-dotnet/Api/ ./
+RUN dotnet publish -c Release -o out
 
-CMD ["python", "worker.py"]
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
+WORKDIR /app
+COPY --from=build /app/out .
+
+ENV ASPNETCORE_URLS=http://+:5000
+EXPOSE 5000
+
+ENTRYPOINT ["dotnet", "Api.dll"]

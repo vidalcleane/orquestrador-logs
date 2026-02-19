@@ -3,7 +3,8 @@ import random
 import time
 import os
 
-API_URL = os.getenv("API_URL", "http://api-dotnet:5000/webhook/preco")
+import os
+API_URL = os.environ.get("API_URL", "http://api-dotnet:5000/webhook/preco")
 
 while True:
     preco = round(random.uniform(1, 200), 2)
