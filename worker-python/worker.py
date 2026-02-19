@@ -1,8 +1,8 @@
 import requests
 import random
 import time
-
 import os
+
 API_URL = os.getenv("API_URL", "http://api-dotnet:5000/webhook/preco")
 
 while True:
