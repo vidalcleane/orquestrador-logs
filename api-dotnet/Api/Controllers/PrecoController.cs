@@ -25,19 +25,19 @@ public class PrecoController : ControllerBase
         return Ok(new { mensagem = "Recebido", valor = dto.Preco });
     }
 
-   [HttpPost("zerar")]
-public async Task<IActionResult> ZerarCache()
-{
-    try
+    [HttpPost("zerar")]
+    public async Task<IActionResult> ZerarCache()
     {
-        await _supabase.From<Preco>().Filter("id", Supabase.Postgrest.Constants.Operator.GreaterThan, 0).Delete();
-        return Ok(new { mensagem = "Tabela zerada!" });
+        try
+        {
+            await _supabase.Rpc("zerar_precos", null);
+            return Ok(new { mensagem = "Tabela zerada!" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { erro = ex.Message });
+        }
     }
-    catch (Exception ex)
-    {
-        return StatusCode(500, new { erro = ex.Message, detalhe = ex.ToString() });
-    }
-}
 }
 
 public class PrecoDto
