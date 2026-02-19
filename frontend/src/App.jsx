@@ -6,7 +6,7 @@ const supabase = createClient(
   "sb_publishable_H5Mq3d6Yx8VuEiK3Jc45ng_Q9iNS9ve"
 );
 
-const API_URL = "https://wonderful-charisma-production-57e5.up.railway.app";
+const API_URL = "https://orquestrador-logs-production-4f06.up.railway.app";
 
 export default function App() {
   const [precos, setPrecos] = useState([]);
