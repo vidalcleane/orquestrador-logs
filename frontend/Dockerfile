@@ -1,17 +1,14 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM node:20-alpine AS build
 WORKDIR /app
 
-COPY api-dotnet/Api/*.csproj ./
-RUN dotnet restore
+COPY package*.json ./
+RUN npm install
 
-COPY api-dotnet/Api/ ./
-RUN dotnet publish -c Release -o out
+COPY . .
+RUN npm run build
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0
-WORKDIR /app
-COPY --from=build /app/out .
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
 
-ENV ASPNETCORE_URLS=http://+:5000
-EXPOSE 5000
-
-ENTRYPOINT ["dotnet", "Api.dll"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
